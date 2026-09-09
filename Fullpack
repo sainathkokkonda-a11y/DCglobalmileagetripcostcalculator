@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Global Mileage & Trip Cost Calculator</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    body {
+      margin: 0;
+      padding: 20px 10px;
+      background-color: #f4f6f9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .tool-card {
+      width: 100%;
+      max-width: 580px;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+      border: 2px solid #1d68d8;
+      overflow: hidden;
+    }
+    .header-banner {
+      background-color: #1d68d8;
+      color: #ffffff;
+      padding: 24px 20px;
+      text-align: center;
+    }
+    .header-banner h1 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+    .header-banner p {
+      margin: 8px 0 0 0;
+      font-size: 13.5px;
+      opacity: 0.95;
+      font-weight: 400;
+    }
+    .card-body {
+      padding: 24px 20px;
+    }
+    .step-group {
+      margin-bottom: 20px;
+    }
+    .step-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #1d68d8;
+      margin-bottom: 8px;
+      display: block;
+    }
+    .input-box {
+      width: 100%;
+      padding: 12px 14px;
+      font-size: 14.5px;
+      color: #334155;
+      border: 1px solid #7dd3fc;
+      border-radius: 8px;
+      background-color: #ffffff;
+      outline: none;
+      transition: all 0.2s ease-in-out;
+    }
+    .input-box:focus {
+      border-color: #1d68d8;
+      box-shadow: 0 0 0 3px rgba(29, 104, 216, 0.15);
+    }
+    select.input-box {
+      cursor: pointer;
+    }
+    .results-box {
+      margin-top: 25px;
+      background-color: #f8fafc;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 18px;
+    }
+    .results-header {
+      font-size: 15px;
+      font-weight: 700;
+      color: #1d68d8;
+      margin-bottom: 12px;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 6px;
+    }
+    .res-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      font-size: 14px;
+      border-bottom: 1px dashed #e2e8f0;
+    }
+    .res-row:last-child {
+      border-bottom: none;
+    }
+    .res-label {
+      color: #475569;
+      font-weight: 500;
+    }
+    .res-val {
+      font-weight: 700;
+      color: #0f172a;
+      font-size: 15px;
+    }
+    .res-val.highlight {
+      color: #1d68d8;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="tool-card">
+  <!-- Blue Top Banner Header -->
+  <div class="header-banner">
+    <h1>Global Mileage & Trip Cost Calculator</h1>
+    <p>Calculate Fuel Consumption, Trip Expenses & Split Costs Worldwide</p>
+  </div>
+
+  <div class="card-body">
+    <!-- 1. Measurement System -->
+    <div class="step-group">
+      <label class="step-title" for="unitSystem">1. Select Measurement Standard</label>
+      <select id="unitSystem" class="input-box" onchange="updateUnits()">
+        <option value="metric">Metric (Kilometers, Liters)</option>
+        <option value="imperial_us">Imperial US (Miles, US Gallons)</option>
+        <option value="imperial_uk">Imperial UK (Miles, UK Gallons)</option>
+      </select>
+    </div>
+
+    <!-- 2. Currency -->
+    <div class="step-group">
+      <label class="step-title" for="currencySymbol">2. Select Currency</label>
+      <select id="currencySymbol" class="input-box" onchange="updateUnits()">
+        <option value="₹">INR (₹) - Indian Rupee</option>
+        <option value="$">USD ($) - US Dollar</option>
+        <option value="€">EUR (€) - Euro</option>
+        <option value="£">GBP (£) - British Pound</option>
+        <option value="AED">AED (Dh) - UAE Dirham</option>
+        <option value="A$">AUD (A$) - Australian Dollar</option>
+        <option value="C$">CAD (C$) - Canadian Dollar</option>
+      </select>
+    </div>
+
+    <!-- 3. Trip Distance -->
+    <div class="step-group">
+      <label class="step-title" id="lblDistance" for="tripDistance">3. Total Trip Distance (km)</label>
+      <input type="number" id="tripDistance" class="input-box" placeholder="e.g. 300" value="300" min="0" oninput="calculateTrip()">
+    </div>
+
+    <!-- 4. Mileage / Efficiency -->
+    <div class="step-group">
+      <label class="step-title" id="lblEfficiency" for="fuelEfficiency">4. Vehicle Mileage / Efficiency (km/L)</label>
+      <input type="number" id="fuelEfficiency" class="input-box" placeholder="e.g. 15" value="15" min="0.1" step="0.1" oninput="calculateTrip()">
+    </div>
+
+    <!-- 5. Fuel Price -->
+    <div class="step-group">
+      <label class="step-title" id="lblPrice" for="fuelPrice">5. Fuel Price (₹ per Liter)</label>
+      <input type="number" id="fuelPrice" class="input-box" placeholder="e.g. 100" value="100" min="0" step="0.01" oninput="calculateTrip()">
+    </div>
+
+    <!-- 6. Passengers -->
+    <div class="step-group">
+      <label class="step-title" for="passengers">6. Number of Persons (To Split Cost)</label>
+      <input type="number" id="passengers" class="input-box" placeholder="e.g. 1" value="1" min="1" step="1" oninput="validatePassengers(); calculateTrip();">
+    </div>
+
+    <!-- Results Breakdown Panel -->
+    <div class="results-box">
+      <div class="results-header">Trip Summary Breakdown</div>
+      
+      <div class="res-row">
+        <span class="res-label">Total Fuel Cost:</span>
+        <span class="res-val highlight" id="resTotalCost">₹2,000.00</span>
+      </div>
+
+      <div class="res-row">
+        <span class="res-label">Cost Per Person:</span>
+        <span class="res-val highlight" id="resCostPerPerson">₹2,000.00</span>
+      </div>
+
+      <div class="res-row">
+        <span class="res-label" id="resFuelLabel">Total Fuel Required:</span>
+        <span class="res-val" id="resFuelNeeded">20.00 Liters</span>
+      </div>
+
+      <div class="res-row">
+        <span class="res-label" id="resDistCostLabel">Running Cost Per km:</span>
+        <span class="res-val" id="resCostPerDist">₹6.67 / km</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function updateUnits() {
+    const sys = document.getElementById('unitSystem').value;
+    const curr = document.getElementById('currencySymbol').value;
+
+    const lblDistance = document.getElementById('lblDistance');
+    const lblEfficiency = document.getElementById('lblEfficiency');
+    const lblPrice = document.getElementById('lblPrice');
+
+    let currencyLabel = curr === 'AED' ? 'AED ' : curr + ' ';
+
+    if (sys === 'metric') {
+      lblDistance.innerText = "3. Total Trip Distance (km)";
+      lblEfficiency.innerText = "4. Vehicle Mileage / Efficiency (km/L)";
+      lblPrice.innerText = `5. Fuel Price (${currencyLabel}per Liter)`;
+    } else if (sys === 'imperial_us') {
+      lblDistance.innerText = "3. Total Trip Distance (miles)";
+      lblEfficiency.innerText = "4. Vehicle Mileage / Efficiency (MPG US)";
+      lblPrice.innerText = `5. Fuel Price (${currencyLabel}per US Gallon)`;
+    } else if (sys === 'imperial_uk') {
+      lblDistance.innerText = "3. Total Trip Distance (miles)";
+      lblEfficiency.innerText = "4. Vehicle Mileage / Efficiency (MPG UK)";
+      lblPrice.innerText = `5. Fuel Price (${currencyLabel}per UK Gallon)`;
+    }
+
+    calculateTrip();
+  }
+
+  // వ్యక్తుల సంఖ్య దశాంశాలలోకి రాకుండా రౌండ్ చేసే ఫంక్షన్
+  function validatePassengers() {
+    const passInput = document.getElementById('passengers');
+    let val = parseFloat(passInput.value);
+    if (!isNaN(val)) {
+      passInput.value = Math.max(1, Math.round(val));
+    }
+  }
+
+  function calculateTrip() {
+    const sys = document.getElementById('unitSystem').value;
+    let curr = document.getElementById('currencySymbol').value;
+    
+    // AED కి తగినట్లు స్పేస్ అడ్జస్ట్మెంట్
+    let currFormatted = curr === 'AED' ? 'AED ' : curr + ' ';
+
+    const distance = parseFloat(document.getElementById('tripDistance').value) || 0;
+    const efficiency = parseFloat(document.getElementById('fuelEfficiency').value) || 0;
+    const price = parseFloat(document.getElementById('fuelPrice').value) || 0;
+    let passengers = parseInt(document.getElementById('passengers').value) || 1;
+    if (passengers < 1) passengers = 1;
+
+    const volSymbol = sys === 'metric' ? 'Liters' : 'Gallons';
+    const distSymbol = sys === 'metric' ? 'km' : 'mi';
+
+    document.getElementById('resFuelLabel').innerText = `Total Fuel Required (${volSymbol}):`;
+    document.getElementById('resDistCostLabel').innerText = `Running Cost Per ${distSymbol}:`;
+
+    if (distance <= 0 || efficiency <= 0 || price <= 0) {
+      document.getElementById('resTotalCost').innerText = currFormatted + "0.00";
+      document.getElementById('resCostPerPerson').innerText = currFormatted + "0.00";
+      document.getElementById('resFuelNeeded').innerText = "0.00 " + volSymbol;
+      document.getElementById('resCostPerDist').innerText = currFormatted + "0.00 / " + distSymbol;
+      return;
+    }
+
+    const fuelNeeded = distance / efficiency;
+    const totalCost = fuelNeeded * price;
+    const costPerPerson = totalCost / passengers;
+    const costPerDist = totalCost / distance;
+
+    document.getElementById('resTotalCost').innerText = currFormatted + totalCost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    document.getElementById('resCostPerPerson').innerText = currFormatted + costPerPerson.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    document.getElementById('resFuelNeeded').innerText = fuelNeeded.toFixed(2) + " " + volSymbol;
+    document.getElementById('resCostPerDist').innerText = currFormatted + costPerDist.toFixed(2) + " / " + distSymbol;
+  }
+
+  window.addEventListener('DOMContentLoaded', updateUnits);
+</script>
+
+</body>
+</html>
