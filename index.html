@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Global Mileage & Trip Cost Calculator</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="tool-card">
+  <!-- Blue Top Banner Header -->
+  <div class="header-banner">
+    <h1>Global Mileage & Trip Cost Calculator</h1>
+    <p>Calculate Fuel Consumption, Trip Expenses & Split Costs Worldwide</p>
+  </div>
+
+  <div class="card-body">
+    <!-- 1. Measurement System -->
+    <div class="step-group">
+      <label class="step-title" for="unitSystem">1. Select Measurement Standard</label>
+      <select id="unitSystem" class="input-box" onchange="updateUnits()">
+        <option value="metric">Metric (Kilometers, Liters)</option>
+        <option value="imperial_us">Imperial US (Miles, US Gallons)</option>
+        <option value="imperial_uk">Imperial UK (Miles, UK Gallons)</option>
+      </select>
+    </div>
+
+    <!-- 2. Currency -->
+    <div class="step-group">
+      <label class="step-title" for="currencySymbol">2. Select Currency</label>
+      <select id="currencySymbol" class="input-box" onchange="updateUnits()">
+        <option value="₹">INR (₹) - Indian Rupee</option>
+        <option value="$">USD ($) - US Dollar</option>
+        <option value="€">EUR (€) - Euro</option>
+        <option value="£">GBP (£) - British Pound</option>
+        <option value="AED">AED (Dh) - UAE Dirham</option>
+        <option value="A$">AUD (A$) - Australian Dollar</option>
+        <option value="C$">CAD (C$) - Canadian Dollar</option>
+      </select>
+    </div>
+
+    <!-- 3. Trip Distance -->
+    <div class="step-group">
+      <label class="step-title" id="lblDistance" for="tripDistance">3. Total Trip Distance (km)</label>
+      <input type="number" id="tripDistance" class="input-box" placeholder="e.g. 300" value="300" min="0" oninput="calculateTrip()">
+    </div>
+
+    <!-- 4. Mileage / Efficiency -->
+    <div class="step-group">
+      <label class="step-title" id="lblEfficiency" for="fuelEfficiency">4. Vehicle Mileage / Efficiency (km/L)</label>
+      <input type="number" id="fuelEfficiency" class="input-box" placeholder="e.g. 15" value="15" min="0.1" step="0.1" oninput="calculateTrip()">
+    </div>
+
+    <!-- 5. Fuel Price -->
+    <div class="step-group">
+      <label class="step-title" id="lblPrice" for="fuelPrice">5. Fuel Price (₹ per Liter)</label>
+      <input type="number" id="fuelPrice" class="input-box" placeholder="e.g. 100" value="100" min="0" step="0.01" oninput="calculateTrip()">
+    </div>
+
+    <!-- 6. Passengers -->
+    <div class="step-group">
+      <label class="step-title" for="passengers">6. Number of Persons (To Split Cost)</label>
+      <input type="number" id="passengers" class="input-box" placeholder="e.g. 1" value="1" min="1" step="1" oninput="validatePassengers(); calculateTrip();">
+    </div>
+
+    <!-- Results Breakdown Panel -->
+    <div class="results-box">
+      <div class="results-header">Trip Summary Breakdown</div>
+      
+      <div class="res-row">
+        <span class="res-label">Total Fuel Cost:</span>
+        <span class="res-val highlight" id="resTotalCost">₹2,000.00</span>
+      </div>
+
+      <div class="res-row">
+        <span class="res-label">Cost Per Person:</span>
+        <span class="res-val highlight" id="resCostPerPerson">₹2,000.00</span>
+      </div>
+
+      <div class="res-row">
+        <span class="res-label" id="resFuelLabel">Total Fuel Required:</span>
+        <span class="res-val" id="resFuelNeeded">20.00 Liters</span>
+      </div>
+
+      <div class="res-row">
+        <span class="res-label" id="resDistCostLabel">Running Cost Per km:</span>
+        <span class="res-val" id="resCostPerDist">₹6.67 / km</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
